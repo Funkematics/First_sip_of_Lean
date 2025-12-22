@@ -1,8 +1,6 @@
 import FirstSipOfLean
 open Classical
 
-def main : IO Unit := do
-  IO.println "Test"
 
 theorem and_commutative (p q : Prop) : p ∧ q → q ∧ p :=
   fun hpq : p ∧ q =>
@@ -17,3 +15,55 @@ def b1 : Bool := true
 #check b1
 def b2 : Bool := false
 #check b2
+#check Nat → Nat → Nat
+#check Nat.succ 2
+#check Nat.add 3
+
+--Create new types
+def α : Type := Nat
+def β : Type := Bool
+#check Prod α β
+#check α × β 
+
+variable {p : Prop}
+variable {q : Prop}
+
+-- Should make nested functions explicit like thsi
+theorem t1 : p → q → p :=
+  fun hp : p =>
+    fun hq : q =>
+  show p from hp
+
+variable (p q r : Prop)
+
+-- commutativity of ∧ and ∨
+example : p ∧ q ↔ q ∧ p := 
+    Iff.intro
+      (fun h : p ∧ q => 
+        show q ∧ p from And.intro (And.right h) (And.left h))
+      (fun h : q ∧ p => 
+        show p ∧ q from And.intro (And.right h) (And.left h))
+
+  example : p ∨ q ↔ q ∨ p := sorry
+
+-- associativity of ∧ and ∨
+example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) := sorry
+example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) := sorry
+
+-- distributivity
+example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := sorry
+example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
+
+-- other properties
+example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
+example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := sorry
+example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := sorry
+example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
+example : ¬(p ∧ ¬p) := sorry
+example : p ∧ ¬q → ¬(p → q) := sorry
+example : ¬p → (p → q) := sorry
+example : (¬p ∨ q) → (p → q) := sorry
+example : p ∨ False ↔ p := sorry
+example : p ∧ False ↔ False := sorry
+example : (p → q) → (¬q → ¬p) := sorry
+
