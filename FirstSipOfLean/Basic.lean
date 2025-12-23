@@ -55,12 +55,26 @@ example : p ∨ q ↔ q ∨ p :=
       Or.elim h
         (fun hq : q =>
           show p ∨ q from Or.intro_right p hq)
-        (fun hp : p =>
+        (fun hp : p => 
           show p ∨ q from Or.intro_left q hp))
 
 
 -- associativity of ∧ and ∨
-example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) := sorry
+example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) := 
+  Iff.intro
+    (fun h : (p ∧ q) ∧ r => 
+      have hp : p ∧ q := And.left h
+      have hpp : p := And.left hp
+      have hpq : q := And.right hp
+      have hr : r := And.right h
+      show p ∧ (q ∧ r) from And.intro hpp (And.intro hpq hr))
+    (fun h : p ∧ (q ∧ r) => 
+      have hqr : q ∧ r := And.right h
+      have hpq : q := And.left hqr
+      have hpr : r := And.right hqr
+      have hp : p := And.left h 
+      show (p ∧ q) ∧ r from And.intro (And.intro hp hpq) hpr)
+
 example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) := sorry
 
 -- distributivity
