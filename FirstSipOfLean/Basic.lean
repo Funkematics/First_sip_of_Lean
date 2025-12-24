@@ -58,6 +58,11 @@ example : p ∨ q ↔ q ∨ p :=
         (fun hp : p => 
           show p ∨ q from Or.intro_left q hp))
 
+--This one is not part of the problem set
+example (C O : Prop)(h : C ∨ O) : O ∨ C := by
+  exact Or.elim h
+    (fun c => Or.inr c)
+    (fun o => Or.inl o)
 
 -- associativity of ∧ and ∨
 example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) := 
@@ -75,7 +80,12 @@ example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) :=
       have hp : p := And.left h 
       show (p ∧ q) ∧ r from And.intro (And.intro hp hpq) hpr)
 
-example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) := sorry
+example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) := 
+  Iff.intro
+    (fun h : (p ∨ q) ∨ r => 
+      Or.elim h
+      sorry 
+
 
 -- distributivity
 example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := sorry
