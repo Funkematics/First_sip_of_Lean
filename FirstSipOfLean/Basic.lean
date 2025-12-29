@@ -80,12 +80,34 @@ example : (p ∧ q) ∧ r ↔ p ∧ (q ∧ r) :=
       have hp : p := And.left h 
       show (p ∧ q) ∧ r from And.intro (And.intro hp hpq) hpr)
 
-example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) := 
+example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) :=
   Iff.intro
     (fun h : (p ∨ q) ∨ r => 
-      Or.elim h
-      sorry 
-
+      Or.elim h                                       --split into 2 cases
+        (fun hpq : (p ∨ q) => 
+          Or.elim hpq                                 --further split into 2 cases
+            (fun hp : p =>                            --case p
+              show p ∨ (q ∨ r) from Or.intro_left (q ∨ r) hp )
+            (fun hq : q =>                            --case q
+              show p ∨ (q ∨ r) from Or.intro_right p (Or.intro_left r hq ) ))
+        (fun hr : r =>                                --case r
+          show p ∨ (q ∨ r) from Or.intro_right p (Or.intro_right q hr)))
+    (fun h: p ∨ (q ∨ r) =>                            -- Backwards direction of proof
+      Or.elim h 
+        (fun hp : p =>                                --Need to remember order when using Or elimination
+          show (p ∨ q) ∨ r from Or.intro_left r (Or.intro_left q hp))
+        (fun hqr : (q ∨ r) => 
+          Or.elim hqr                                 -- We just split q v r, p hypothesis is separate sub-proof
+            (fun hq : q => 
+              show (p ∨ q) ∨ r from Or.intro_left r (Or.intro_right p hq)) 
+            (fun hr : r => 
+              show (p ∨ q) ∨ r from Or.intro_right (p ∨ q) hr )))
+      
+#check Or.intro_left 
+#check Or.intro_right
+#check Or.elim
+variable (h1 : P ∨ Q)
+#check Or.elim h1 (Or.intro_left Q) (Or.intro_right P)
 
 -- distributivity
 example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := sorry
