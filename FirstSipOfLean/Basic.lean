@@ -118,7 +118,15 @@ example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) :=
           show (p ∧ q) ∨ (p ∧ r) from Or.intro_right (p ∧ q) (And.intro hp hr)))
     (fun h : (p ∧ q) ∨ (p ∧ r) => 
       Or.elim h
-      sorry
+      (fun hpq : p ∧ q => 
+         have hp : p := And.left hpq
+         have hq : q := And.right hpq
+         show p ∧ (q ∨ r) from And.intro hp (Or.intro_left r hq)) 
+      (fun hpr : p ∧ r => 
+        have hp : p := And.left hpr
+        have hr : r := And.right hpr 
+        show p ∧ (q ∨ r) from And.intro hp (Or.intro_right q hr)))
+
 
 
 example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
