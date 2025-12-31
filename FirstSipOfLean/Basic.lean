@@ -129,7 +129,24 @@ example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) :=
 
 
 
-example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
+example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := 
+  Iff.intro                                       --We try something different from Or eliminations and minimize nesting functions
+    (fun h : p ∨ (q ∧ r) => 
+      have hp : p := Or.intro_left (q ∧ r) p 
+      have hq : q := And.left (Or.intro_right p (q ∧ r) )
+      have hr : r := And.right (Or.intro_right p (q ∧ r))
+      show (p ∨ q) ∧ (p ∨ r) from And.intro (Or.intro_right p hq) (Or.intro_right p hr))
+    (fun h : (p ∨ q) ∧ (p ∨ r) => 
+      have hpq : p ∨ q := And.left h
+      have hpr : p ∨ r := And.right h
+      Or.elim hpq
+        (fun hp : p => 
+          show p ∨ (q ∧ r) from Or.intro_left (q ∧ r) hp) 
+        (fun hq : q =>
+          show p ∨ (q ∧ r) from Or.intro_right p (And.intro hq r))
+
+      _)
+      _
 
 -- other properties
 example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
