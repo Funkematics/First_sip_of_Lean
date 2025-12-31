@@ -59,7 +59,8 @@ example : p ∨ q ↔ q ∨ p :=
           show p ∨ q from Or.intro_left q hp))
 
 --This one is not part of the problem set
-example (C O : Prop)(h : C ∨ O) : O ∨ C := by
+example (C O : Pr
+op)(h : C ∨ O) : O ∨ C := by
   exact Or.elim h
     (fun c => Or.inr c)
     (fun o => Or.inl o)
@@ -103,14 +104,23 @@ example : (p ∨ q) ∨ r ↔ p ∨ (q ∨ r) :=
             (fun hr : r => 
               show (p ∨ q) ∨ r from Or.intro_right (p ∨ q) hr )))
       
-#check Or.intro_left 
-#check Or.intro_right
-#check Or.elim
-variable (h1 : P ∨ Q)
-#check Or.elim h1 (Or.intro_left Q) (Or.intro_right P)
 
 -- distributivity
-example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := sorry
+example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) := 
+  Iff.intro
+    (fun h : p ∧ (q ∨ r) =>
+      have hp : p := And.left h
+      have hqr : (q ∨ r) := And.right h
+      Or.elim hqr
+        (fun hq : q =>
+          show (p ∧ q) ∨ (p ∧ r) from Or.intro_left (p ∧ r) (And.intro hp hq))
+        (fun hr : r => 
+          show (p ∧ q) ∨ (p ∧ r) from Or.intro_right (p ∧ q) (And.intro hp hr)))
+    (fun h : (p ∧ q) ∨ (p ∧ r) => 
+      Or.elim h
+      sorry
+
+
 example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := sorry
 
 -- other properties
