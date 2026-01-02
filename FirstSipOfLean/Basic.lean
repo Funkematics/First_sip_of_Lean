@@ -225,7 +225,13 @@ example : ¬p → (p → q) :=
       have hf : False := h hp
       show q from False.elim hf))                 --This one is just confusing but mostly due to my 
                                                   --bad reading comprehension
-example : (¬p ∨ q) → (p → q) := sorry
+                                                  --Turns out to be ex falso sequitur quodlibet or "principle of explosion"
+example : (¬p ∨ q) → (p → q) := 
+  (fun h : ¬p ∨ q => 
+    (fun hp : p => 
+      Or.elim h 
+        ()))
+
 example : p ∨ False ↔ p := sorry
 example : p ∧ False ↔ False := sorry
 example : (p → q) → (¬q → ¬p) := sorry
