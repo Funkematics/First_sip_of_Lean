@@ -230,9 +230,24 @@ example : (¬p ∨ q) → (p → q) :=
   (fun h : ¬p ∨ q => 
     (fun hp : p => 
       Or.elim h 
-        ()))
+        (fun hnp : ¬p => 
+          have hf : False := hnp hp               --A contradiction again
+          show q from False.elim hf)
+        (fun hq : q =>
+          show q from hq)))
 
-example : p ∨ False ↔ p := sorry
+example : p ∨ False ↔ p :=                        --Trivial one
+  Iff.intro
+    (fun hpf : p ∨ False => 
+      Or.elim hpf
+        (fun hp : p => 
+          show p from hp)
+        (fun hf : False =>
+          show p from False.elim hf))
+    (fun hp : p => 
+      show p ∨ False from Or.intro_left False hp)
+
+
 example : p ∧ False ↔ False := sorry
 example : (p → q) → (¬q → ¬p) := sorry
-
+#check False.elim
