@@ -225,7 +225,12 @@ example : p ∧ ¬q → ¬(p → q) :=                     -- p ∧ ¬q → (p �
     have hnq : ¬q := And.right hpnq
     show False from hnq (ptq hp)))
 
-example : ¬p → (p → q) := sorry
+example : ¬p → (p → q) := 
+  (fun h : ¬p => 
+    (fun hp : p => 
+      have hf : False := h hp
+      show q from False.elim hf))                 --This one is just confusing but mostly due to my 
+                                                  --bad reading comprehension
 example : (¬p ∨ q) → (p → q) := sorry
 example : p ∨ False ↔ p := sorry
 example : p ∧ False ↔ False := sorry
