@@ -191,6 +191,12 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=       -- ¬(p ∨ q) is equal to (p ∨
           show False from h (Or.inr hq)))
     (fun h : ¬p ∧ ¬q =>                     
       (fun hpq : p ∨ q => 
+  215 example : p ∧ ¬q → ¬(p → q) :=                     -- p ∧ ¬q → (p → q) → false, so show (p → q) is false       from intro
+  216   (fun hpnq : p ∧ ¬q =>         
+  217     (fun hp : p =>              
+E 218       (fun hq  : q =>           
+  219         have hnq : ¬q := And.right hpnq
+  220         show False from hnq hq)))
         Or.elim hpq
         (fun hp : p =>
           show False from (And.left h) hp )
@@ -212,7 +218,13 @@ example : ¬(p ∧ ¬p) :=                               -- (p ∧ (p → false)
   have hnp : ¬p := And.right h
   show False from hnp hp)
 
-example : p ∧ ¬q → ¬(p → q) := sorry
+example : p ∧ ¬q → ¬(p → q) :=                     -- p ∧ ¬q → (p → q) → false, so show (p → q) is false from intro
+  (fun hpnq : p ∧ ¬q =>
+    (fun ptq : (p → q) =>
+    have hp : p := And.left hpnq
+    have hnq : ¬q := And.right hpnq
+    show False from hnq (ptq hp)))
+
 example : ¬p → (p → q) := sorry
 example : (¬p ∨ q) → (p → q) := sorry
 example : p ∨ False ↔ p := sorry
