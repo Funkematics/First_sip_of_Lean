@@ -248,6 +248,15 @@ example : p ∨ False ↔ p :=                        --Trivial one
       show p ∨ False from Or.intro_left False hp)
 
 
-example : p ∧ False ↔ False := sorry
+example : p ∧ False ↔ False := 
+  Iff.intro
+    (fun hpf : p ∧ False => 
+      have hp : p := And.left hpf
+      have hf : False := And.right hpf
+      show False from hf)
+    (fun hf : False => 
+      have hp : p := False.elim hf                --We can generate anything from False
+      show p ∧ False from And.intro hp hf)
+
 example : (p → q) → (¬q → ¬p) := sorry
 #check False.elim
