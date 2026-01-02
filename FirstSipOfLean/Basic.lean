@@ -191,12 +191,6 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=       -- ¬(p ∨ q) is equal to (p ∨
           show False from h (Or.inr hq)))
     (fun h : ¬p ∧ ¬q =>                     
       (fun hpq : p ∨ q => 
-  215 example : p ∧ ¬q → ¬(p → q) :=                     -- p ∧ ¬q → (p → q) → false, so show (p → q) is false       from intro
-  216   (fun hpnq : p ∧ ¬q =>         
-  217     (fun hp : p =>              
-E 218       (fun hq  : q =>           
-  219         have hnq : ¬q := And.right hpnq
-  220         show False from hnq hq)))
         Or.elim hpq
         (fun hp : p =>
           show False from (And.left h) hp )
