@@ -197,7 +197,15 @@ example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=       -- ¬(p ∨ q) is equal to (p ∨
         (fun hq : q =>
           show False from (And.right h) hq)))                   
 
-example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
+example : ¬p ∨ ¬q → ¬(p ∧ q) :=                    -- (p → false) ∨ (q → false) → (p ∧ q) → false
+    (fun h : ¬p ∨ ¬q =>
+      fun hpq : (p ∧ q) =>                          -- ¬p ∨ ¬q → ¬(p ∧ q) by showing that p ∧ q → False
+        Or.elim h                                   -- Producses two cases, ¬p is true and ¬q is true
+          (fun hnp : ¬p =>                          -- Apply functions (negation is a function)
+            show False from hnp (And.left hpq))
+          (fun hnq : ¬q =>
+            show False from hnq (And.right hpq)))
+            
 example : ¬(p ∧ ¬p) := sorry
 example : p ∧ ¬q → ¬(p → q) := sorry
 example : ¬p → (p → q) := sorry
