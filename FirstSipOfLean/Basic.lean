@@ -59,8 +59,7 @@ example : p ∨ q ↔ q ∨ p :=
           show p ∨ q from Or.intro_left q hp))
 
 --This one is not part of the problem set
-example (C O : Pr
-op)(h : C ∨ O) : O ∨ C := by
+example (C O : Prop)(h : C ∨ O) : O ∨ C := by
   exact Or.elim h
     (fun c => Or.inr c)
     (fun o => Or.inl o)
@@ -130,26 +129,34 @@ example : p ∧ (q ∨ r) ↔ (p ∧ q) ∨ (p ∧ r) :=
 
 
 example : p ∨ (q ∧ r) ↔ (p ∨ q) ∧ (p ∨ r) := 
-  Iff.intro                                       --We try something different from Or eliminations and minimize nesting functions
-    (fun h : p ∨ (q ∧ r) => 
-      have hp : p := Or.intro_left (q ∧ r) p 
-      have hq : q := And.left (Or.intro_right p (q ∧ r) )
-      have hr : r := And.right (Or.intro_right p (q ∧ r))
-      show (p ∨ q) ∧ (p ∨ r) from And.intro (Or.intro_right p hq) (Or.intro_right p hr))
-    (fun h : (p ∨ q) ∧ (p ∨ r) => 
-      have hpq : p ∨ q := And.left h
-      have hpr : p ∨ r := And.right h
-      Or.elim hpq
+  Iff.intro                                       
+    (fun h : p ∨ (q ∧ r) =>
+      Or.elim h
         (fun hp : p => 
-          show p ∨ (q ∧ r) from Or.intro_left (q ∧ r) hp) 
-        (fun hq : q =>
-          show p ∨ (q ∧ r) from Or.intro_right p (And.intro hq r))
+          show (p ∨ q) ∧ (p ∨ r) from And.intro (Or.intro_left q hp) (Or.intro_left r hp))
+        (fun hqr : q ∧ r =>
+          have hq : q := And.left hqr
+          have hr : r := And.right hqr
+          show (p ∨ q) ∧ (p ∨ r) from And.intro (Or.intro_right p hq) (Or.intro_right p hr)))
+      (fun h : (p ∨ q) ∧ (p ∨ r) => 
+        have hpq : p ∨ q := And.left h
+        Or.elim hpq
+          (fun hp : p =>
+            show p ∨ (q ∧ r) from Or.intro_left (q ∧ r) hp )
+          (fun hq : q =>
+            have hpr : p ∨ r := And.right h
+            Or.elim hpr 
+              (fun hp : p =>
+                show p ∨ (q ∧ r) from Or.intro_left (q ∧ r) hp)
+              (fun hr : r =>
+                show p ∨ (q ∧ r) from Or.intro_right p (And.intro hq hr))))
 
-      _)
-      _
 
--- other properties
-example : (p → (q → r)) ↔ (p ∧ q → r) := sorry
+    -- other properties
+example : (p → (q → r)) ↔ (p ∧ q → r) := 
+  Iff.intro
+    (fun h : (p → (q → r)) => _)
+  _
 example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) := sorry
 example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := sorry
 example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
