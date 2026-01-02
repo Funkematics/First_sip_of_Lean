@@ -206,7 +206,12 @@ example : ¬p ∨ ¬q → ¬(p ∧ q) :=                    -- (p → false) ∨
           (fun hnq : ¬q =>
             show False from hnq (And.right hpq)))
             
-example : ¬(p ∧ ¬p) := sorry
+example : ¬(p ∧ ¬p) :=                               -- (p ∧ (p → false)) → false
+ (fun h : (p ∧ ¬ p) => 
+  have hp : p := And.left h
+  have hnp : ¬p := And.right h
+  show False from hnp hp)
+
 example : p ∧ ¬q → ¬(p → q) := sorry
 example : ¬p → (p → q) := sorry
 example : (¬p ∨ q) → (p → q) := sorry
