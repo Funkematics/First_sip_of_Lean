@@ -181,7 +181,22 @@ example : ((p ∨ q) → r) ↔ (p → r) ∧ (q → r) :=
             (fun hq : q =>
               show r from (And.right h) hq)))
   
-example : ¬(p ∨ q) ↔ ¬p ∧ ¬q := sorry
+example : ¬(p ∨ q) ↔ ¬p ∧ ¬q :=       -- ¬(p ∨ q) is equal to (p ∨ q) → False, this is actually the same as the last proof
+  Iff.intro
+    (fun h : ¬(p ∨ q) =>
+      And.intro
+        (fun hp : p => 
+          show False from h (Or.inl hp))  --using Or.inl notation to switch it up
+        (fun hq : q =>
+          show False from h (Or.inr hq)))
+    (fun h : ¬p ∧ ¬q =>                     
+      (fun hpq : p ∨ q => 
+        Or.elim hpq
+        (fun hp : p =>
+          show False from (And.left h) hp )
+        (fun hq : q =>
+          show False from (And.right h) hq)))                   
+
 example : ¬p ∨ ¬q → ¬(p ∧ q) := sorry
 example : ¬(p ∧ ¬p) := sorry
 example : p ∧ ¬q → ¬(p → q) := sorry
