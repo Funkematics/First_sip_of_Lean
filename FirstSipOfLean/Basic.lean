@@ -258,5 +258,10 @@ example : p ∧ False ↔ False :=
       have hp : p := False.elim hf                --We can generate anything from False
       show p ∧ False from And.intro hp hf)
 
-example : (p → q) → (¬q → ¬p) := sorry
-#check False.elim
+example : (p → q) → (¬q → ¬p) :=                  -- (p → q) → ((p → False) → (q → False)) This is contrapositive
+  (fun ptq : p → q => 
+    (fun nq : ¬q => 
+      (fun hp : p => 
+        show False from nq (ptq hp) )))
+
+
