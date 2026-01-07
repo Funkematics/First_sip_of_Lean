@@ -40,9 +40,12 @@ example : ¬(p → q) → p ∧ ¬q :=
 
                                         -- Need to show that p is true and not q holds.
 example : (p → q) → (¬p ∨ q) := 
-  (fun h : p → q :=
+  (fun h : p → q =>
     Or.elim (em p)
-      (fun hp : p => _))
+      (fun hp : p => 
+        Or.inr (h hp))
+      (fun hnp : ¬p =>
+        Or.inl hnp))
 
 example : (¬q → ¬p) → (p → q) := sorry
 
@@ -50,3 +53,10 @@ example : p ∨ ¬p := em p                  --Law of excluded middle
 
 example : (((p → q) → p) → p) := sorry
 
+--My own exercises
+example : ¬¬p → p := 
+  (fun hnnp : ¬¬p =>
+    Or.elim (em p)
+      (fun hp : p =>
+        hp)
+      (fun hnp : ¬p => absurd hnp hnnp))
