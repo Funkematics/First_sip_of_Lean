@@ -50,7 +50,7 @@ variable (trans_r : ∀ {x y z}, r x y → r y z → r x z)
 example (a b c d : α) (hab : r a b) (hcb : r c b) (hcd : r c d): r a d :=
   trans_r (trans_r hab (symm_r hcb)) hcd
 
-example (a b c d : α) (hab : r a b) (hcb : r c b) (hcd : r c d)W : r d a :=
+example (a b c d : α) (hab : r a b) (hcb : r c b) (hcd : r c d) : r d a :=
   have hca : r c a := trans_r hcb (symm_r hab)
   trans_r (symm_r hcd) hca              --ballin
 
@@ -60,13 +60,25 @@ example (a b c d : α) (hab : r a b) (hcb : r c b) (hcd : r c d)W : r d a :=
 
 example : (∀ x, p x ∧ q x) ↔ (∀ x, p x) ∧ (∀ x, q x) := sorry
 
-example : (∀ x, p x ∧ q x) → (∀ x, p x) ∧ (∀ x, q x) := 
-  (fun h => 
-    And.intro
-      (fun z =>
-      show p z from (h z).left)
-      (fun y =>
-      show q y from (h y).right))
+section topSplit
+-- This is the exercise above split in two for each direction
+
+    example : (∀ x, p x ∧ q x) → (∀ x, p x) ∧ (∀ x, q x) := 
+      (fun h => 
+        And.intro
+          (fun z =>
+          show p z from (h z).left)
+          (fun y =>
+          show q y from (h y).right))
+
+    example : (∀ x, p x) ∧ (∀ x, q x) → (∀ x, p x ∧ q x) := 
+      (fun (h : (∀ x, p x) ∧ (∀ x, q x)) => 
+        (fun y =>
+          show p y ∧ q y from And.intro (h.left y) (h.right y)))
+
+end topSplit
+
+
 
 example : (∀ x, p x → q x) → (∀ x, p x) → (∀ x, q x) := sorry
 example : (∀ x, p x) ∨ (∀ x, q x) → ∀ x, p x ∨ q x := sorry
